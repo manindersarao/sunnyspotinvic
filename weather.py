@@ -1,5 +1,7 @@
 import os
 import requests
+from datetime import datetime
+
 def get_weather_data(lat, lon, api_key):
     url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={api_key}&units=metric"
     response = requests.get(url)
@@ -39,20 +41,49 @@ def find_sunny_places(num_places):
         if coordinates:
             lat, lon = coordinates
             weather_data = get_weather_data(lat, lon, api_key_weather)
-            print(weather_data)
             if weather_data and weather_data.get('weather'):
                 weather_description = weather_data['weather'][0]['description']
-                print(f"weather description {weather_description}")
                 if 'sun' in weather_description.lower():
                     sunny_places.append((place, weather_description))
 
     top_sunny_places = sorted(sunny_places, key=lambda x: x[1], reverse=True)[:num_places]
     return top_sunny_places
 
+def generate_html_page():
+    page_title = "Sunny Spot in VIC"
+    sunny_places = find_sunny_places(3)
+    sunny_places_list = ""
+    if sunny_places:
+        sunny_places_list = "<ul>" + "".join(f"<li>{place[0]}</li>" for place in sunny_places) + "</ul>"
+    else:
+        sunny_places_list = "<p>No sunny places found in Victoria.</p>"
+    
+    current_datetime = datetime.now()
+    formatted_datetime = current_datetime.strftime("%d-%m-%Y %H:%M")
+    
+    template = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{page_title}</title>
+    </head>
+     <body>
+        <h1>{page_title}</h1>
+        <p>Generated on: {formatted_datetime}</p>
+        <h2>Top 3 Sunny Places in Victoria:</h2>
+        {sunny_places_list}
+    </body>
+    </html>
+    """
+    return template
 
 if __name__ == "__main__":
-    num_places = 3
-    top_sunny_places = find_sunny_places(num_places)
-    print(f"Top {num_places} sunny places in Victoria, Australia:")
-    for i, place in enumerate(top_sunny_places, start=1):
-        print(f"{i}. {place[0]}")
+    # Generate the HTML content using the function
+    html_content = generate_html_page()
+    
+    # Save the HTML content to a file
+    with open("./page/index.html", "w", encoding="utf-8") as file:
+        file.write(html_content)
+
+    print("HTML page has been generated and saved to index.html.")

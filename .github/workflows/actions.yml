@@ -2,8 +2,7 @@ name: run weather.py
 
 on:
   schedule:
-    - cron: '0 0 * * 1' # At 00:00 on Monday
-
+    - cron: '0 */3 * * *' # Runs every 3 hours
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,3 +25,16 @@ jobs:
           API_KEY_WEATHER: ${{ secrets.API_WEATHER_KEY }}
           API_KEY_GEOCODE: ${{ secrets.API_KEY_GEOCODE }}
         run: python weather.py
+
+      - name: commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git diff-index --quiet HEAD || (git commit -a -m "updated weather" --allow-empty)
+
+      - name: push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main 
