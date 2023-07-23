@@ -1,3 +1,4 @@
+import os
 import requests
 def get_weather_data(lat, lon, api_key):
     url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={api_key}&units=metric"
