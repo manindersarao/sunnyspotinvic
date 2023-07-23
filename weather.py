@@ -1,6 +1,9 @@
 import os
 import requests
 from datetime import datetime
+import json
+
+file_path = "places.json"
 
 def get_weather_data(lat, lon, api_key):
     url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={api_key}&units=metric"
@@ -24,16 +27,10 @@ def get_coordinates(place, api_key):
 def find_sunny_places(num_places):
     api_key_weather = os.environ["API_KEY_WEATHER"]
     api_key_geocode = os.environ["API_KEY_GEOCODE"]
-    places = [
-        'Melbourne',
-        'Geelong',
-        'Bendigo',
-        'Ballarat',
-        'Shepparton',
-        'Warrnambool',
-        'Broadmeadows'
-        # Add more places if needed
-    ]
+
+    with open(file_path, "r") as file:
+        list_of_places = json.load(file)
+        places= list_of_places["places"]
 
     sunny_places = []
     for place in places:
