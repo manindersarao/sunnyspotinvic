@@ -19,9 +19,8 @@ def get_coordinates(place, api_key):
     return None
 
 def find_sunny_places(num_places):
-    api_key_weather = 'f9c97b1dfd41faad47f6fba6739b71fe'
-    api_key_geocode = 'bfd6702799fd49b5aff656001d5fb73d'
-
+    api_key_weather = os.environ["API_KEY_WEATHER"]
+    api_key_geocode = os.environ["API_KEY_GEOCODE"]
     places = [
         'Melbourne',
         'Geelong',
