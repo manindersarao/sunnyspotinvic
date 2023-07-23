@@ -23,7 +23,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: execute py script # run main.py
+      - name: execute py script # run weather.py
         env:
           API_KEY_WEATHER: ${{ secrets.API_WEATHER_KEY }}
           API_KEY_GEOCODE: ${{ secrets.API_KEY_GEOCODE }}

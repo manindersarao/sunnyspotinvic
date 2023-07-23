@@ -1,7 +1,8 @@
 import os
 import requests
-from datetime import datetime
+import pytz
 import json
+from datetime import datetime
 
 file_path = "places.json"
 
@@ -55,8 +56,13 @@ def generate_html_page():
     else:
         sunny_places_list = "<p>No sunny places found in Victoria.</p>"
     
-    current_datetime = datetime.now()
-    formatted_datetime = current_datetime.strftime("%d-%m-%Y %H:%M")
+    
+    # Set the timezone for Melbourne
+    melbourne_timezone = pytz.timezone('Australia/Melbourne')
+
+    # Get the current time in Melbourne timezone
+    current_time_melbourne = datetime.now(melbourne_timezone)
+    formatted_datetime = current_time_melbourne.strftime("%d-%m-%Y %H:%M")
     
     template = f"""
     <!DOCTYPE html>
@@ -67,7 +73,7 @@ def generate_html_page():
     </head>
      <body>
         <h1>{page_title}</h1>
-        <p>Generated on: {formatted_datetime}</p>
+        <p>Generated on (Australia/Melbourne): {formatted_datetime}</p>
         <h2>Top 3 Sunny Places in Victoria:</h2>
         {sunny_places_list}
     </body>
