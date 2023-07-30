@@ -44,8 +44,8 @@ def find_sunny_places(num_places):
                 if 'sun' in weather_description.lower():
                     sunny_places.append((place, weather_description))
 
-    top_sunny_places = sorted(sunny_places, key=lambda x: x[1], reverse=True)[:num_places]
-    return top_sunny_places
+    #top_sunny_places = sorted(sunny_places, key=lambda x: x[1], reverse=True)[:num_places]
+    return sunny_places
 
 def generate_html_page():
     page_title = "Sunny Spot in VIC"
@@ -74,7 +74,7 @@ def generate_html_page():
      <body>
         <h1>{page_title}</h1>
         <p>Generated on (Australia/Melbourne): {formatted_datetime}</p>
-        <h2>Top 3 Sunny Places in Victoria:</h2>
+        <h2>Sunny Places in Victoria:</h2>
         {sunny_places_list}
     </body>
     </html>
