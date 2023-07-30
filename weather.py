@@ -7,10 +7,13 @@ from datetime import datetime
 file_path = "places.json"
 
 def get_weather_data(lat, lon, api_key):
-    url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={api_key}&units=metric"
+    url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&cnt=3&appid={api_key}&units=metric"
     response = requests.get(url)
     if response.status_code == 200:
-        return response.json()
+        data = response.json()
+        places= data["list"]
+        weather = places[0]["weather"][0].get("main")
+        return weather
     else:
         return None
 
@@ -38,11 +41,11 @@ def find_sunny_places(num_places):
         coordinates = get_coordinates(place, api_key_geocode)
         if coordinates:
             lat, lon = coordinates
-            weather_data = get_weather_data(lat, lon, api_key_weather)
-            if weather_data and weather_data.get('weather'):
-                weather_description = weather_data['weather'][0]['description']
-                if 'sun' in weather_description.lower():
-                    sunny_places.append((place, weather_description))
+            weather = get_weather_data(lat, lon, api_key_weather)
+            #print(weather_data)
+            if weather and "Clear" in weather:
+                sunny_places.append(place)
+    
 
     #top_sunny_places = sorted(sunny_places, key=lambda x: x[1], reverse=True)[:num_places]
     return sunny_places
@@ -52,7 +55,7 @@ def generate_html_page():
     sunny_places = find_sunny_places(3)
     sunny_places_list = ""
     if sunny_places:
-        sunny_places_list = "<ul>" + "".join(f"<li>{place[0]}</li>" for place in sunny_places) + "</ul>"
+        sunny_places_list = "<ul>" + "".join(f"<li>{place}</li>" for place in sunny_places) + "</ul>"
     else:
         sunny_places_list = "<p>No sunny places found in Victoria.</p>"
     
